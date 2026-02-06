@@ -1,0 +1,170 @@
+﻿<Window x:Class="DialogDemo.DialogTestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:DialogDemo"
+        Title="Dialog Test Bench"
+        Width="1100"
+        Height="700"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- CONTROL PANEL -->
+        <GroupBox Header="Dialog Control" Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal" Margin="8">
+
+                <Button x:Name="OpenDialogButton" Content="Open Dialog" Width="120" Margin="0,0,8,0"
+                        Click="OpenDialogButton_Click" />
+
+                <Button x:Name="CloseDialogButton" Content="Close Dialog" Width="120" Margin="0,0,16,0"
+                        Click="CloseDialogButton_Click" />
+
+                <TextBlock Text="Timeout:" VerticalAlignment="Center" Margin="0,0,4,0" />
+                <TextBox x:Name="TimeoutTextBox" Width="60" Text="300" Margin="0,0,16,0" />
+
+                <TextBlock Text="Size:" VerticalAlignment="Center" Margin="0,0,4,0" />
+                <ComboBox x:Name="SizeComboBox"
+                          Width="150"
+                          ItemsSource="{x:Static local:DialogSizeExtensions.Values}"
+                          SelectedIndex="2"
+                          Margin="0,0,16,0" />
+
+                <TextBlock Text="W:" VerticalAlignment="Center" />
+                <TextBox x:Name="WidthTextBox" Width="60" Text="800" Margin="4,0,16,0" />
+
+                <TextBlock Text="H:" VerticalAlignment="Center" />
+                <TextBox x:Name="HeightTextBox" Width="60" Text="800" Margin="4,0,16,0" />
+
+                <TextBlock Text="Theme:" VerticalAlignment="Center" Margin="0,0,4,0" />
+                <ComboBox x:Name="ThemeComboBox"
+                          Width="150"
+                          ItemsSource="{x:Static local:DialogThemeTypeExtensions.Values}"
+                          SelectedIndex="0" />
+            </StackPanel>
+        </GroupBox>
+
+        <!-- MESSAGES -->
+        <GroupBox Header="Messages" Grid.Row="1" Grid.Column="0" Margin="0,0,10,10">
+            <Grid Margin="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Main Message:" />
+                <TextBox x:Name="MainMessageTextBox"
+                         Grid.Row="0"
+                         AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Auto"
+                         Text="Card: 6364530000029556&#10;Remaining: 25,00 EUR" />
+
+                <Button Grid.Row="1" Content="Update Main" Width="120" Margin="0,4,0,8"
+                        Click="UpdateMainButton_Click" />
+
+                <TextBlock Grid.Row="2" Text="Sub Message:" />
+                <TextBox x:Name="SubMessageTextBox"
+                         Grid.Row="2"
+                         AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Auto"
+                         Text="Do you want to continue?" />
+
+                <Button Grid.Row="3" Content="Update Sub" Width="120" Margin="0,4,0,0"
+                        Click="UpdateSubButton_Click" />
+            </Grid>
+        </GroupBox>
+
+        <!-- BUTTON CONFIG -->
+        <GroupBox Header="Dialog Buttons" Grid.Row="1" Grid.Column="1" Margin="0,0,10,10">
+            <Grid Margin="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- BUTTON 1 -->
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Button 1:" />
+                <TextBox x:Name="Button1TextBox" Grid.Row="0" Grid.Column="1" Text="Bestätigung" />
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="HotKey:" />
+                <TextBox x:Name="Button1HotKeyTextBox" Grid.Row="0" Grid.Column="3" Width="60" Text="Enter" />
+                <CheckBox x:Name="Button1DefaultCheckBox" Grid.Row="1" Grid.Column="1" Content="Is Default" />
+
+                <!-- BUTTON 2 -->
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Button 2:" />
+                <TextBox x:Name="Button2TextBox" Grid.Row="2" Grid.Column="1" Text="Aufladung" />
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="HotKey:" />
+                <TextBox x:Name="Button2HotKeyTextBox" Grid.Row="2" Grid.Column="3" Width="60" Text="P" />
+
+                <!-- BUTTON 3 -->
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Button 3:" />
+                <TextBox x:Name="Button3TextBox" Grid.Row="3" Grid.Column="1" Text="Abbruch" />
+                <TextBlock Grid.Row="3" Grid.Column="2" Text="HotKey:" />
+                <TextBox x:Name="Button3HotKeyTextBox" Grid.Row="3" Grid.Column="3" Width="60" Text="Escape" />
+                <CheckBox x:Name="Button3CancelCheckBox" Grid.Row="4" Grid.Column="1" Content="Is Cancel" />
+
+                <!-- BUTTON 4 -->
+                <TextBlock Grid.Row="5" Grid.Column="0" Text="Button 4:" />
+                <TextBox x:Name="Button4TextBox" Grid.Row="5" Grid.Column="1" Text="Extra" />
+                <TextBlock Grid.Row="5" Grid.Column="2" Text="HotKey:" />
+                <TextBox x:Name="Button4HotKeyTextBox" Grid.Row="5" Grid.Column="3" Width="60" Text="F4" />
+            </Grid>
+        </GroupBox>
+
+        <!-- LAYOUT -->
+        <GroupBox Header="Layout" Grid.Row="1" Grid.Column="2" Margin="0,0,0,10">
+            <StackPanel Margin="8">
+
+                <CheckBox x:Name="UseCustomLayoutCheckBox" Content="Use custom layout" Margin="0,0,0,8" />
+
+                <TextBlock Text="Rows:" FontWeight="Bold" />
+                <TextBox x:Name="TitleStarTextBox" Text="0.10" Margin="0,2" />
+                <TextBox x:Name="MainStarTextBox" Text="0.40" Margin="0,2" />
+                <TextBox x:Name="SubStarTextBox" Text="0.25" Margin="0,2" />
+                <TextBox x:Name="ProgressStarTextBox" Text="0.05" Margin="0,2" />
+                <TextBox x:Name="ButtonsStarTextBox" Text="0.20" Margin="0,2" />
+
+                <TextBlock Text="Title columns:" FontWeight="Bold" Margin="0,8,0,0" />
+                <TextBox x:Name="TitleIconStarTextBox" Text="0.20" Margin="0,2" />
+                <TextBox x:Name="TitleTextStarTextBox" Text="0.80" Margin="0,2" />
+
+                <TextBlock Text="Buttons columns:" FontWeight="Bold" Margin="0,8,0,0" />
+                <TextBox x:Name="ButtonsLeftStarTextBox" Text="0.60" Margin="0,2" />
+                <TextBox x:Name="ButtonsRightStarTextBox" Text="0.40" Margin="0,2" />
+            </StackPanel>
+        </GroupBox>
+
+        <!-- RESULT -->
+        <GroupBox Header="Result" Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0">
+            <TextBox x:Name="ResultTextBox"
+                     Margin="8"
+                     IsReadOnly="True"
+                     VerticalScrollBarVisibility="Auto"
+                     TextWrapping="Wrap" />
+        </GroupBox>
+    </Grid>
+</Window>

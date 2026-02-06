@@ -1,10 +1,18 @@
-﻿namespace DialogDemo
+﻿using System.Windows;
+
+namespace DialogDemo
 {
     internal class Program
     {
         #region Private Methods
 
         private static void Main()
+        {
+            //RunLegacyDialogTest();
+            RunTestWindow();
+        }
+
+        private static void RunLegacyDialogTest()
         {
             var options = new DialogOptions
             {
@@ -16,7 +24,6 @@
                 ModalMode = DialogModalMode.BlockClientWindow,
                 ClientTarget = DialogClientTarget.CreateDefaultVb6Target(),
 
-                // Buttons (left → right)
                 Button1 = new DialogButtonConfig
                 {
                     Text = "Bestätigung",
@@ -54,6 +61,20 @@
             Thread.Sleep(3000);
             SystemWideModalDialogService.UpdateSubMessage("Please wait… processing.");
 
+            thread.Join();
+        }
+
+        private static void RunTestWindow()
+        {
+            var thread = new Thread(() =>
+            {
+                var app = new Application();
+                var window = new DialogTestWindow();
+                app.Run(window);
+            });
+
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
             thread.Join();
         }
 
