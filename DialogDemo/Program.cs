@@ -35,7 +35,7 @@
                     IsCancel = true
                 },
 
-                AutoCloseSeconds = 30,
+                AutoCloseSeconds = 300,
                 Theme = DialogTheme.Sand(),
                 Height = 800,
                 Width = 800,

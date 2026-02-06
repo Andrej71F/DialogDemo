@@ -1,6 +1,7 @@
 ﻿<Window x:Class="DialogDemo.DialogWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         WindowStyle="None"
         ResizeMode="NoResize"
         SizeToContent="Manual"
@@ -10,12 +11,23 @@
         FocusManager.FocusedElement="{Binding ElementName=ButtonsPanel}">
 
     <Window.Resources>
+
+        <!-- Dynamic font resources -->
+        <sys:Double x:Key="Font.Title">16</sys:Double>
+        <sys:Double x:Key="Font.Main">14</sys:Double>
+        <sys:Double x:Key="Font.Sub">12</sys:Double>
+        <sys:Double x:Key="Font.Button">13</sys:Double>
+
+        <!-- Button style -->
         <Style x:Key="DialogButtonStyle" TargetType="Button">
-            <Setter Property="Padding" Value="6,3" />
+            <Setter Property="Padding" Value="10,6" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="#707070" />
             <Setter Property="Background" Value="#F0F0F0" />
             <Setter Property="Foreground" Value="Black" />
+            <Setter Property="FontSize" Value="{DynamicResource Font.Button}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="6,0,0,0" />
 
             <Style.Triggers>
                 <Trigger Property="IsKeyboardFocused" Value="True">
@@ -34,7 +46,7 @@
     <Border BorderBrush="Gray" BorderThickness="1" Padding="10">
         <Grid>
 
-            <!-- Rows: 10% / 40% / 25% / 5% / 20% -->
+            <!-- Proportional layout -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.10*" />
                 <RowDefinition Height="0.40*" />
@@ -44,7 +56,7 @@
             </Grid.RowDefinitions>
 
             <!-- Title bar -->
-            <Grid Grid.Row="0" x:Name="TitleBar">
+            <Grid Grid.Row="0" x:Name="TitleBar" Margin="0,0,0,5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.20*" />
                     <ColumnDefinition Width="0.80*" />
@@ -54,34 +66,39 @@
                        Grid.Column="0"
                        Width="32"
                        Height="32"
-                       Margin="0,0,5,0"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        Stretch="Uniform" />
 
                 <TextBlock x:Name="TitleText"
                            Grid.Column="1"
+                           FontSize="{DynamicResource Font.Title}"
                            FontWeight="Bold"
                            VerticalAlignment="Center"
-                           TextTrimming="CharacterEllipsis" />
+                           TextTrimming="CharacterEllipsis"
+                           Margin="5,0,0,0" />
             </Grid>
 
-            <!-- Main text -->
+            <!-- Main message -->
             <ScrollViewer Grid.Row="1"
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled"
                           Margin="0,10,0,5">
                 <TextBlock x:Name="MainMessage"
-                           TextWrapping="Wrap" />
+                           FontSize="{DynamicResource Font.Main}"
+                           TextWrapping="Wrap"
+                           Margin="5" />
             </ScrollViewer>
 
-            <!-- Sub text -->
+            <!-- Sub message -->
             <ScrollViewer Grid.Row="2"
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled"
                           Margin="0,0,0,10">
                 <TextBlock x:Name="SubMessage"
-                           TextWrapping="Wrap" />
+                           FontSize="{DynamicResource Font.Sub}"
+                           TextWrapping="Wrap"
+                           Margin="5" />
             </ScrollViewer>
 
             <!-- Progress bar -->
@@ -91,9 +108,10 @@
                          Minimum="0"
                          Maximum="100"
                          Value="100"
-                         Visibility="Collapsed" />
+                         Visibility="Collapsed"
+                         Margin="0,0,0,5" />
 
-            <!-- Buttons row -->
+            <!-- Buttons -->
             <Grid Grid.Row="4" Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.60*" />
@@ -103,7 +121,7 @@
                 <StackPanel x:Name="ButtonsPanel"
                             Grid.Column="0"
                             Orientation="Horizontal"
-                            HorizontalAlignment="Left"
+                            HorizontalAlignment="Right"
                             VerticalAlignment="Center" />
             </Grid>
         </Grid>

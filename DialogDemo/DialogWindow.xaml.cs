@@ -24,20 +24,23 @@ namespace DialogDemo
 
         #region Private Methods
 
-        private void ForceFocus()
+        // ---------------------------------------------------------
+        // Dynamic font scaling based on window size
+        // ---------------------------------------------------------
+        private void UpdateFontScaling()
         {
-            var target = _defaultButton ?? _btn1;
+            // 600 is the baseline width for Medium size
+            double scale = Width / 600.0;
 
-            if (target != null)
-            {
-                target.Focus();
-                Keyboard.Focus(target);
-            }
-
-            Activate();
-            Focus();
+            Resources["Font.Title"] = 16 * scale;
+            Resources["Font.Main"] = 14 * scale;
+            Resources["Font.Sub"] = 12 * scale;
+            Resources["Font.Button"] = 13 * scale;
         }
 
+        // ---------------------------------------------------------
+        // Window size logic (DialogSize + CustomDef)
+        // ---------------------------------------------------------
         private void ApplySize(DialogOptions options)
         {
             const double SMALL_W = 420;
@@ -122,6 +125,9 @@ namespace DialogDemo
             Height = MEDIUM_H;
         }
 
+        // ---------------------------------------------------------
+        // UI construction
+        // ---------------------------------------------------------
         private void BuildUi(DialogOptions opt)
         {
             Title = opt.Title ?? string.Empty;
@@ -176,24 +182,21 @@ namespace DialogDemo
                 ButtonsPanel.Children.Add(btn);
         }
 
+        // ---------------------------------------------------------
+        // Theme application (colors only, no font sizes)
+        // ---------------------------------------------------------
         private void ApplyTheme(DialogTheme theme)
         {
             if (theme == null) return;
 
             TitleBar.Background = theme.TitleBackground;
             TitleText.Foreground = theme.TitleForeground;
-            TitleText.FontSize = theme.TitleFontSize;
-            TitleText.FontFamily = new FontFamily(theme.TitleFontFamily);
 
             MainMessage.Foreground = theme.MainForeground;
             MainMessage.Background = theme.MainBackground;
-            MainMessage.FontSize = theme.MainFontSize;
-            MainMessage.FontFamily = new FontFamily(theme.MainFontFamily);
 
             SubMessage.Foreground = theme.SubForeground;
             SubMessage.Background = theme.SubBackground;
-            SubMessage.FontSize = theme.SubFontSize;
-            SubMessage.FontFamily = new FontFamily(theme.SubFontFamily);
 
             foreach (var child in ButtonsPanel.Children)
             {
@@ -201,8 +204,6 @@ namespace DialogDemo
                 {
                     b.Background = theme.ButtonBackground;
                     b.Foreground = theme.ButtonForeground;
-                    b.FontSize = theme.ButtonFontSize;
-                    b.FontFamily = new FontFamily(theme.ButtonFontFamily);
                 }
             }
         }
@@ -227,10 +228,27 @@ namespace DialogDemo
             }
         }
 
+        private void ForceFocus()
+        {
+            var target = _defaultButton ?? _btn1;
+
+            if (target != null)
+            {
+                target.Focus();
+                Keyboard.Focus(target);
+            }
+
+            Activate();
+            Focus();
+        }
+
         #endregion Private Methods
 
         #region Protected Methods
 
+        // ---------------------------------------------------------
+        // Keyboard navigation
+        // ---------------------------------------------------------
         protected override void OnPreviewKeyDown(KeyEventArgs e)
         {
             base.OnPreviewKeyDown(e);
@@ -334,6 +352,7 @@ namespace DialogDemo
             Topmost = true;
 
             ApplySize(options);
+            UpdateFontScaling();
             BuildUi(options);
             ApplyTheme(options.Theme);
             ApplyIcon(options.Icon);
@@ -346,6 +365,9 @@ namespace DialogDemo
 
         #region Public Events
 
+        // ---------------------------------------------------------
+        // Public API
+        // ---------------------------------------------------------
         public event EventHandler<DialogButtonResult> ButtonClicked;
 
         public event EventHandler DialogClosed;
