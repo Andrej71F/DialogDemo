@@ -87,6 +87,15 @@ namespace DialogDemo
         public string Text { get; set; }
         public string AutomationId { get; set; }
 
+        // Optional keyboard shortcut (Enter, Escape, Q, A, etc.)
+        public System.Windows.Input.Key? HotKey { get; set; }
+
+        // Optional: marks this button as the default action (Enter fallback)
+        public bool IsDefault { get; set; }
+
+        // Optional: marks this button as the cancel action (Escape fallback)
+        public bool IsCancel { get; set; }
+
         #endregion Public Properties
     }
 

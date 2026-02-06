@@ -1,4 +1,4 @@
-namespace DialogDemo
+﻿namespace DialogDemo
 {
     internal class Program
     {
@@ -13,21 +13,29 @@ namespace DialogDemo
                 SubMessage = "Do you want to continue?",
                 Icon = DialogIcon.Question,
 
-                // Default: Block VB6 window
                 ModalMode = DialogModalMode.BlockClientWindow,
-
-                // Use default VB6 window class array
                 ClientTarget = DialogClientTarget.CreateDefaultVb6Target(),
 
-                // Buttons
-                Button1 = new DialogButtonConfig { Text = "Yes" },
-                Button2 = new DialogButtonConfig { Text = "No" },
-                Button3 = new DialogButtonConfig { Text = "Cancel" },
+                // Buttons (left → right)
+                Button1 = new DialogButtonConfig
+                {
+                    Text = "Bestätigung",
+                    HotKey = System.Windows.Input.Key.Enter,
+                    IsDefault = true
+                },
+                Button2 = new DialogButtonConfig
+                {
+                    Text = "Aufladung",
+                    HotKey = System.Windows.Input.Key.P
+                },
+                Button3 = new DialogButtonConfig
+                {
+                    Text = "Abbruch",
+                    HotKey = System.Windows.Input.Key.Escape,
+                    IsCancel = true
+                },
 
-                // Auto-close after 30 seconds (progress bar will appear)
                 AutoCloseSeconds = 30,
-
-                // Theme Sand
                 Theme = DialogTheme.Sand()
             };
 
@@ -40,13 +48,8 @@ namespace DialogDemo
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
 
-            // Example: update submessage after 3 seconds
             Thread.Sleep(3000);
-            SystemWideModalDialogService.UpdateSubMessage("Please wait� processing.");
-
-            // Example: force external close
-            // Thread.Sleep(6000);
-            // SystemWideModalDialogService.Close();
+            SystemWideModalDialogService.UpdateSubMessage("Please wait… processing.");
 
             thread.Join();
         }

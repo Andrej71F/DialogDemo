@@ -1,7 +1,8 @@
-﻿// DialogWindow.xaml.cs
-using System;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace DialogDemo
@@ -10,11 +11,32 @@ namespace DialogDemo
     {
         #region Private Fields
 
+        private readonly System.Collections.Generic.Dictionary<Key, Button> _hotKeyMap =
+            new System.Collections.Generic.Dictionary<Key, Button>();
+
         private Button _btn1, _btn2, _btn3, _btn4;
+
+        private Button _defaultButton;
+
+        private Button _cancelButton;
 
         #endregion Private Fields
 
         #region Private Methods
+
+        private void ForceFocus()
+        {
+            var target = _defaultButton ?? _btn1;
+
+            if (target != null)
+            {
+                target.Focus();
+                Keyboard.Focus(target);
+            }
+
+            Activate();
+            Focus();
+        }
 
         private void BuildUi(DialogOptions opt)
         {
@@ -29,10 +51,10 @@ namespace DialogDemo
             _btn3 = CreateButton(opt.Button3, DialogButtonResult.Option3);
             _btn4 = CreateButton(opt.Button4, DialogButtonResult.Option4);
 
-            AddButtonIfVisible(_btn4);
-            AddButtonIfVisible(_btn3);
-            AddButtonIfVisible(_btn2);
             AddButtonIfVisible(_btn1);
+            AddButtonIfVisible(_btn2);
+            AddButtonIfVisible(_btn3);
+            AddButtonIfVisible(_btn4);
         }
 
         private Button CreateButton(DialogButtonConfig cfg, DialogButtonResult result)
@@ -49,6 +71,18 @@ namespace DialogDemo
             };
 
             btn.Click += (s, e) => ButtonClicked?.Invoke(this, result);
+
+            if (cfg.HotKey.HasValue)
+                _hotKeyMap[cfg.HotKey.Value] = btn;
+
+            if (cfg.IsDefault)
+                _defaultButton = btn;
+
+            if (cfg.IsCancel)
+                _cancelButton = btn;
+
+            btn.Style = (Style)FindResource("DialogButtonStyle");
+
             return btn;
         }
 
@@ -105,6 +139,92 @@ namespace DialogDemo
 
         #region Protected Methods
 
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        {
+            base.OnPreviewKeyDown(e);
+
+            var buttons = new[] { _btn1, _btn2, _btn3, _btn4 }
+                .Where(b => b != null)
+                .ToList();
+
+            if (buttons.Count == 0)
+                return;
+
+            var focused = Keyboard.FocusedElement as Button;
+            int index = focused != null ? buttons.IndexOf(focused) : -1;
+
+            if (_hotKeyMap.TryGetValue(e.Key, out var hotBtn))
+            {
+                hotBtn.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                e.Handled = true;
+                return;
+            }
+
+            switch (e.Key)
+            {
+                case Key.Enter:
+                    if (_defaultButton != null)
+                    {
+                        _defaultButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                        e.Handled = true;
+                        return;
+                    }
+                    if (focused != null)
+                    {
+                        focused.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                        e.Handled = true;
+                    }
+                    break;
+
+                case Key.Escape:
+                    if (_cancelButton != null)
+                    {
+                        _cancelButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                        e.Handled = true;
+                        return;
+                    }
+                    break;
+
+                case Key.Left:
+                    if (index > 0)
+                    {
+                        buttons[index - 1].Focus();
+                        e.Handled = true;
+                    }
+                    break;
+
+                case Key.Right:
+                    if (index >= 0 && index < buttons.Count - 1)
+                    {
+                        buttons[index + 1].Focus();
+                        e.Handled = true;
+                    }
+                    break;
+
+                case Key.Tab:
+                    if (index == -1)
+                    {
+                        buttons[0].Focus();
+                        e.Handled = true;
+                    }
+                    else
+                    {
+                        int next = (index + 1) % buttons.Count;
+                        buttons[next].Focus();
+                        e.Handled = true;
+                    }
+                    break;
+
+                case Key.Space:
+                    if (focused != null)
+                    {
+                        focused.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                        e.Handled = true;
+                    }
+                    break;
+            }
+        }
+
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
@@ -124,6 +244,9 @@ namespace DialogDemo
             BuildUi(options);
             ApplyTheme(options.Theme);
             ApplyIcon(options.Icon);
+
+            Loaded += (_, __) => ForceFocus();
+            Activated += (_, __) => ForceFocus();
         }
 
         #endregion Public Constructors

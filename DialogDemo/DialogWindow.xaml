@@ -5,7 +5,30 @@
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight"
         Background="White"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Focusable="True"
+        FocusManager.FocusedElement="{Binding ElementName=ButtonsPanel}">
+    <Window.Resources>
+        <Style x:Key="DialogButtonStyle" TargetType="Button">
+            <Setter Property="Padding" Value="6,3" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="#707070" />
+            <Setter Property="Background" Value="#F0F0F0" />
+            <Setter Property="Foreground" Value="Black" />
+
+            <Style.Triggers>
+                <Trigger Property="IsKeyboardFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="#0078D7" />
+                    <Setter Property="BorderThickness" Value="2" />
+                    <Setter Property="Background" Value="#E5F1FB" />
+                </Trigger>
+                <Trigger Property="IsDefaulted" Value="True">
+                    <Setter Property="BorderBrush" Value="#0050A0" />
+                    <Setter Property="BorderThickness" Value="2" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
 
     <Border BorderBrush="Gray" BorderThickness="1" Padding="10">
         <StackPanel>
