@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace DialogDemo
 {
@@ -125,14 +126,22 @@ namespace DialogDemo
 
         private void ApplyIcon(DialogIcon icon)
         {
-            IconBlock.Text = icon switch
+            System.Drawing.Icon sysIcon = icon switch
             {
-                DialogIcon.Info => "ℹ",
-                DialogIcon.Warning => "⚠",
-                DialogIcon.Error => "✖",
-                DialogIcon.Question => "?",
-                _ => string.Empty
+                DialogIcon.Info => System.Drawing.SystemIcons.Information,
+                DialogIcon.Warning => System.Drawing.SystemIcons.Warning,
+                DialogIcon.Error => System.Drawing.SystemIcons.Error,
+                DialogIcon.Question => System.Drawing.SystemIcons.Question,
+                _ => null
             };
+
+            if (sysIcon != null)
+            {
+                IconImage.Source = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(
+                    sysIcon.Handle,
+                    Int32Rect.Empty,
+                    BitmapSizeOptions.FromEmptyOptions());
+            }
         }
 
         #endregion Private Methods

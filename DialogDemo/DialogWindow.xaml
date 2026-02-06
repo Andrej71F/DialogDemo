@@ -8,6 +8,7 @@
         WindowStartupLocation="CenterScreen"
         Focusable="True"
         FocusManager.FocusedElement="{Binding ElementName=ButtonsPanel}">
+
     <Window.Resources>
         <Style x:Key="DialogButtonStyle" TargetType="Button">
             <Setter Property="Padding" Value="6,3" />
@@ -36,10 +37,14 @@
             <!-- Title bar -->
             <Border x:Name="TitleBar" Padding="5">
                 <DockPanel>
-                    <TextBlock x:Name="IconBlock"
-                               Width="24"
-                               TextAlignment="Center"
-                               Margin="0,0,5,0" />
+
+                    <!-- Windows System Icon -->
+                    <Image x:Name="IconImage"
+                           Width="24"
+                           Height="24"
+                           Margin="0,0,5,0"
+                           Stretch="Uniform" />
+
                     <TextBlock x:Name="TitleText"
                                FontWeight="Bold"
                                VerticalAlignment="Center" />
@@ -55,7 +60,7 @@
                        Margin="0,0,0,10"
                        TextWrapping="Wrap" />
 
-            <!-- PROGRESS BAR (correct place) -->
+            <!-- Progress bar -->
             <ProgressBar x:Name="AutoCloseProgress"
                          Height="6"
                          Margin="0,0,0,10"
