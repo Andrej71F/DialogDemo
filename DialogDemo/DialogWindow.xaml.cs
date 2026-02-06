@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace DialogDemo
 {
@@ -39,6 +38,90 @@ namespace DialogDemo
             Focus();
         }
 
+        private void ApplySize(DialogOptions options)
+        {
+            const double SMALL_W = 420;
+            const double SMALL_H = 260;
+
+            const double MEDIUM_W = 600;
+            const double MEDIUM_H = 360;
+
+            const double LARGE_W = 800;
+            const double LARGE_H = 520;
+
+            double finalWidth;
+            double finalHeight;
+
+            if (options.DialogSize != DialogSize.CustomDef)
+            {
+                switch (options.DialogSize)
+                {
+                    case DialogSize.Small:
+                        finalWidth = SMALL_W;
+                        finalHeight = SMALL_H;
+                        break;
+
+                    case DialogSize.Large:
+                        finalWidth = LARGE_W;
+                        finalHeight = LARGE_H;
+                        break;
+
+                    case DialogSize.Medium:
+                    default:
+                        finalWidth = MEDIUM_W;
+                        finalHeight = MEDIUM_H;
+                        break;
+                }
+
+                Width = finalWidth;
+                Height = finalHeight;
+                return;
+            }
+
+            bool hasW = options.Width.HasValue;
+            bool hasH = options.Height.HasValue;
+
+            if (hasW && hasH)
+            {
+                Width = options.Width.Value;
+                Height = options.Height.Value;
+                return;
+            }
+
+            if (hasW && !hasH)
+            {
+                double w = options.Width.Value;
+
+                if (w <= (SMALL_W + MEDIUM_W) / 2)
+                    Height = SMALL_H;
+                else if (w <= (MEDIUM_W + LARGE_W) / 2)
+                    Height = MEDIUM_H;
+                else
+                    Height = LARGE_H;
+
+                Width = w;
+                return;
+            }
+
+            if (!hasW && hasH)
+            {
+                double h = options.Height.Value;
+
+                if (h <= (SMALL_H + MEDIUM_H) / 2)
+                    Width = SMALL_W;
+                else if (h <= (MEDIUM_H + LARGE_H) / 2)
+                    Width = MEDIUM_W;
+                else
+                    Width = LARGE_W;
+
+                Height = h;
+                return;
+            }
+
+            Width = MEDIUM_W;
+            Height = MEDIUM_H;
+        }
+
         private void BuildUi(DialogOptions opt)
         {
             Title = opt.Title ?? string.Empty;
@@ -67,7 +150,7 @@ namespace DialogDemo
             {
                 Content = cfg.Text,
                 Margin = new Thickness(5),
-                MinWidth = 80,
+                MinWidth = 100,
                 Tag = result
             };
 
@@ -140,7 +223,7 @@ namespace DialogDemo
                 IconImage.Source = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(
                     sysIcon.Handle,
                     Int32Rect.Empty,
-                    BitmapSizeOptions.FromEmptyOptions());
+                    System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
             }
         }
 
@@ -250,6 +333,7 @@ namespace DialogDemo
 
             Topmost = true;
 
+            ApplySize(options);
             BuildUi(options);
             ApplyTheme(options.Theme);
             ApplyIcon(options.Icon);

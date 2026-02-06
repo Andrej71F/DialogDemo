@@ -36,7 +36,10 @@
                 },
 
                 AutoCloseSeconds = 30,
-                Theme = DialogTheme.Sand()
+                Theme = DialogTheme.Sand(),
+                Height = 800,
+                Width = 800,
+                DialogSize = DialogSize.Large
             };
 
             var thread = new Thread(() =>

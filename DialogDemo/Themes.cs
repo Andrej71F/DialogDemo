@@ -1,4 +1,4 @@
-// SystemWideModalDialogContracts.cs
+// Themes.cs
 using System;
 using System.Windows.Media;
 
@@ -39,6 +39,20 @@ namespace DialogDemo
         None = 0,
 
         BlockClientWindow
+    }
+
+    // ---------------------------------------------------------
+    // NEW: DialogSize with CustomDef
+    // ---------------------------------------------------------
+    public enum DialogSize
+    {
+        Small = 0,
+
+        Medium = 1,
+
+        Large = 2,
+
+        CustomDef = 100
     }
 
     public sealed class DialogClientTarget
@@ -87,13 +101,9 @@ namespace DialogDemo
         public string Text { get; set; }
         public string AutomationId { get; set; }
 
-        // Optional keyboard shortcut (Enter, Escape, Q, A, etc.)
         public System.Windows.Input.Key? HotKey { get; set; }
 
-        // Optional: marks this button as the default action (Enter fallback)
         public bool IsDefault { get; set; }
-
-        // Optional: marks this button as the cancel action (Escape fallback)
         public bool IsCancel { get; set; }
 
         #endregion Public Properties
@@ -131,7 +141,7 @@ namespace DialogDemo
 
         #region Public Methods
 
-        public static DialogTheme Hell() // Light
+        public static DialogTheme Hell()
         {
             return new DialogTheme
             {
@@ -157,7 +167,7 @@ namespace DialogDemo
             };
         }
 
-        public static DialogTheme Dunkel() // Dark
+        public static DialogTheme Dunkel()
         {
             return new DialogTheme
             {
@@ -183,7 +193,7 @@ namespace DialogDemo
             };
         }
 
-        public static DialogTheme Blau() // Blue
+        public static DialogTheme Blau()
         {
             return new DialogTheme
             {
@@ -209,7 +219,7 @@ namespace DialogDemo
             };
         }
 
-        public static DialogTheme Sand() // Sand / Pesochnaya
+        public static DialogTheme Sand()
         {
             return new DialogTheme
             {
@@ -247,10 +257,8 @@ namespace DialogDemo
         public string SubMessage { get; set; }
 
         public DialogIcon Icon { get; set; } = DialogIcon.Info;
-
         public DialogModalMode ModalMode { get; set; } = DialogModalMode.BlockClientWindow;
 
-        // Now uses array-based client target
         public DialogClientTarget ClientTarget { get; set; }
 
         public DialogButtonConfig Button1 { get; set; }
@@ -260,8 +268,15 @@ namespace DialogDemo
 
         public DialogTheme Theme { get; set; } = DialogTheme.Hell();
 
-        // Only timeout seconds remain
         public int AutoCloseSeconds { get; set; } = 0;
+
+        // NEW: size selection logic
+        public DialogSize DialogSize { get; set; } = DialogSize.Medium;
+
+        // NEW: explicit override for CustomDef
+        public double? Width { get; set; }
+
+        public double? Height { get; set; }
 
         #endregion Public Properties
     }
