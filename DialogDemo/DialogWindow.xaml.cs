@@ -242,6 +242,40 @@ namespace DialogDemo
             Focus();
         }
 
+        private void ApplyInitialLayout()
+        {
+            // Rows
+            TitleRow.Height = new GridLength(DialogLayoutDefinition.TitleStar, GridUnitType.Star);
+            MainMessageRow.Height = new GridLength(DialogLayoutDefinition.MainStar, GridUnitType.Star);
+            SubMessageRow.Height = new GridLength(DialogLayoutDefinition.SubStar, GridUnitType.Star);
+            ProgressRow.Height = new GridLength(DialogLayoutDefinition.ProgressStar, GridUnitType.Star);
+            ButtonsRow.Height = new GridLength(DialogLayoutDefinition.ButtonsStar, GridUnitType.Star);
+
+            // TitleBar columns
+            TitleIconColumn.Width = new GridLength(DialogLayoutDefinition.TitleIconStar, GridUnitType.Star);
+            TitleTextColumn.Width = new GridLength(DialogLayoutDefinition.TitleTextStar, GridUnitType.Star);
+
+            // Buttons row columns
+            ButtonsLeftColumn.Width = new GridLength(DialogLayoutDefinition.ButtonsLeftStar, GridUnitType.Star);
+            ButtonsRightColumn.Width = new GridLength(DialogLayoutDefinition.ButtonsRightStar, GridUnitType.Star);
+        }
+
+        private void ApplyDynamicLayout()
+        {
+            bool hasSub = !string.IsNullOrWhiteSpace(SubMessage.Text);
+
+            if (hasSub)
+            {
+                MainMessageRow.Height = new GridLength(DialogLayoutDefinition.MainStar, GridUnitType.Star);
+                SubMessageRow.Height = new GridLength(DialogLayoutDefinition.SubStar, GridUnitType.Star);
+            }
+            else
+            {
+                MainMessageRow.Height = new GridLength(DialogLayoutDefinition.MainStarWhenNoSub, GridUnitType.Star);
+                SubMessageRow.Height = new GridLength(0, GridUnitType.Star);
+            }
+        }
+
         #endregion Private Methods
 
         #region Protected Methods
@@ -351,9 +385,11 @@ namespace DialogDemo
 
             Topmost = true;
 
+            ApplyInitialLayout();
             ApplySize(options);
             UpdateFontScaling();
             BuildUi(options);
+            ApplyDynamicLayout();
             ApplyTheme(options.Theme);
             ApplyIcon(options.Icon);
 
@@ -386,7 +422,11 @@ namespace DialogDemo
 
         public void UpdateMainMessage(string text) => MainMessage.Text = text ?? string.Empty;
 
-        public void UpdateSubMessage(string text) => SubMessage.Text = text ?? string.Empty;
+        public void UpdateSubMessage(string text)
+        {
+            SubMessage.Text = text ?? string.Empty;
+            ApplyDynamicLayout();
+        }
 
         public void SimulateButtonClick(DialogButtonResult result)
         {

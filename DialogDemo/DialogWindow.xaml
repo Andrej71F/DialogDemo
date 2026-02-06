@@ -18,48 +18,72 @@
         <sys:Double x:Key="Font.Sub">12</sys:Double>
         <sys:Double x:Key="Font.Button">13</sys:Double>
 
-        <!-- Button style -->
+        <!-- Modern button style -->
         <Style x:Key="DialogButtonStyle" TargetType="Button">
-            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="Padding" Value="14,8" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="Background" Value="#E6E6E6" />
+            <Setter Property="BorderBrush" Value="#C0C0C0" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="#707070" />
-            <Setter Property="Background" Value="#F0F0F0" />
             <Setter Property="Foreground" Value="Black" />
             <Setter Property="FontSize" Value="{DynamicResource Font.Button}" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Margin" Value="6,0,0,0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
 
-            <Style.Triggers>
-                <Trigger Property="IsKeyboardFocused" Value="True">
-                    <Setter Property="BorderBrush" Value="#0078D7" />
-                    <Setter Property="BorderThickness" Value="2" />
-                    <Setter Property="Background" Value="#E5F1FB" />
-                </Trigger>
-                <Trigger Property="IsDefaulted" Value="True">
-                    <Setter Property="BorderBrush" Value="#0050A0" />
-                    <Setter Property="BorderThickness" Value="2" />
-                </Trigger>
-            </Style.Triggers>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#F5F5F5" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#A0A0A0" />
+                            </Trigger>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#DADADA" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#808080" />
+                            </Trigger>
+
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#0078D7" />
+                                <Setter TargetName="border" Property="BorderThickness" Value="2" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Window.Resources>
 
-    <Border BorderBrush="Gray" BorderThickness="1" Padding="10">
+    <Border BorderBrush="Gray" BorderThickness="1" Padding="12">
         <Grid>
 
             <!-- Proportional layout -->
             <Grid.RowDefinitions>
-                <RowDefinition Height="0.10*" />
-                <RowDefinition Height="0.40*" />
-                <RowDefinition Height="0.25*" />
-                <RowDefinition Height="0.05*" />
-                <RowDefinition Height="0.20*" />
+                <RowDefinition x:Name="TitleRow" Height="0.10*" />
+                <RowDefinition x:Name="MainMessageRow" Height="0.40*" />
+                <RowDefinition x:Name="SubMessageRow" Height="0.25*" />
+                <RowDefinition x:Name="ProgressRow" Height="0.05*" />
+                <RowDefinition x:Name="ButtonsRow" Height="0.20*" />
             </Grid.RowDefinitions>
 
             <!-- Title bar -->
-            <Grid Grid.Row="0" x:Name="TitleBar" Margin="0,0,0,5">
+            <Grid Grid.Row="0" x:Name="TitleBar" Margin="0,0,0,8">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.20*" />
-                    <ColumnDefinition Width="0.80*" />
+                    <ColumnDefinition x:Name="TitleIconColumn" Width="0.20*" />
+                    <ColumnDefinition x:Name="TitleTextColumn" Width="0.80*" />
                 </Grid.ColumnDefinitions>
 
                 <Image x:Name="IconImage"
@@ -76,18 +100,20 @@
                            FontWeight="Bold"
                            VerticalAlignment="Center"
                            TextTrimming="CharacterEllipsis"
-                           Margin="5,0,0,0" />
+                           Margin="8,0,0,0" />
             </Grid>
 
             <!-- Main message -->
             <ScrollViewer Grid.Row="1"
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled"
-                          Margin="0,10,0,5">
+                          Margin="0,10,0,6">
                 <TextBlock x:Name="MainMessage"
                            FontSize="{DynamicResource Font.Main}"
                            TextWrapping="Wrap"
-                           Margin="5" />
+                           Margin="8"
+                           TextOptions.TextFormattingMode="Ideal"
+                           TextOptions.TextRenderingMode="ClearType" />
             </ScrollViewer>
 
             <!-- Sub message -->
@@ -98,28 +124,32 @@
                 <TextBlock x:Name="SubMessage"
                            FontSize="{DynamicResource Font.Sub}"
                            TextWrapping="Wrap"
-                           Margin="5" />
+                           Margin="8"
+                           TextOptions.TextFormattingMode="Ideal"
+                           TextOptions.TextRenderingMode="ClearType" />
             </ScrollViewer>
 
             <!-- Progress bar -->
             <ProgressBar x:Name="AutoCloseProgress"
                          Grid.Row="3"
-                         Height="6"
+                         Height="8"
                          Minimum="0"
                          Maximum="100"
                          Value="100"
                          Visibility="Collapsed"
-                         Margin="0,0,0,5" />
+                         Foreground="#4CAF50"
+                         Background="#E0E0E0"
+                         Margin="0,0,0,6" />
 
             <!-- Buttons -->
             <Grid Grid.Row="4" Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.60*" />
-                    <ColumnDefinition Width="0.40*" />
+                    <ColumnDefinition x:Name="ButtonsLeftColumn" Width="0.60*" />
+                    <ColumnDefinition x:Name="ButtonsRightColumn" Width="0.40*" />
                 </Grid.ColumnDefinitions>
 
                 <StackPanel x:Name="ButtonsPanel"
-                            Grid.Column="0"
+                            Grid.Column="1"
                             Orientation="Horizontal"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center" />

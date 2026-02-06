@@ -55,6 +55,37 @@ namespace DialogDemo
         CustomDef = 100
     }
 
+    public static class DialogLayoutDefinition
+    {
+        #region Public Fields
+
+        // Row proportions
+        public const double TitleStar = 0.10;
+
+        public const double MainStar = 0.40;
+
+        public const double SubStar = 0.25;
+
+        public const double ProgressStar = 0.05;
+
+        public const double ButtonsStar = 0.20;
+
+        // When SubMessage is empty
+        public const double MainStarWhenNoSub = MainStar + SubStar; // 0.65
+
+        // TitleBar columns
+        public const double TitleIconStar = 0.20;
+
+        public const double TitleTextStar = 0.80;
+
+        // Buttons row columns
+        public const double ButtonsLeftStar = 0.60;
+
+        public const double ButtonsRightStar = 0.40;
+
+        #endregion Public Fields
+    }
+
     public sealed class DialogClientTarget
     {
         #region Public Fields
