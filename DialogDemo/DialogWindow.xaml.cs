@@ -118,6 +118,9 @@ namespace DialogDemo
         public DialogWindow(DialogOptions options)
         {
             InitializeComponent();
+
+            Topmost = true;
+
             BuildUi(options);
             ApplyTheme(options.Theme);
             ApplyIcon(options.Icon);

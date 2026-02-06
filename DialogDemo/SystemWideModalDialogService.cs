@@ -1,5 +1,4 @@
-﻿// SystemWideModalDialogService.cs
-using System;
+﻿using System;
 
 namespace DialogDemo
 {
@@ -17,17 +16,14 @@ namespace DialogDemo
         {
             DialogClientTarget target = options.ClientTarget;
 
-            // If no target provided → use default VB6 config
             if (target == null)
             {
                 target = DialogClientTarget.CreateDefaultVb6Target();
             }
 
-            // 1. Direct HWND
             if (target.WindowHandle != IntPtr.Zero)
                 return target.WindowHandle;
 
-            // 2. Class names array
             if (target.WindowClassNames != null && target.WindowClassNames.Length > 0)
             {
                 foreach (var className in target.WindowClassNames)
@@ -41,11 +37,9 @@ namespace DialogDemo
                 }
             }
 
-            // 3. Process name
             if (!string.IsNullOrEmpty(target.ProcessName))
                 return Win32Interop.FindMainWindowByProcessName(target.ProcessName);
 
-            // Nothing found
             return IntPtr.Zero;
         }
 
@@ -59,10 +53,15 @@ namespace DialogDemo
                 throw new ArgumentNullException(nameof(options));
 
             IntPtr clientHwnd = ResolveClientWindow(options);
+            IntPtr maskHwnd = IntPtr.Zero;
 
             if (options.ModalMode == DialogModalMode.BlockClientWindow &&
                 clientHwnd != IntPtr.Zero)
             {
+                // 1) создаём маску поверх VB6
+                maskHwnd = Win32Interop.CreateMaskOverWindow(clientHwnd);
+
+                // 2) опционально — дополнительно отключаем окно VB6
                 Win32Interop.EnableWindow(clientHwnd, false);
             }
 
@@ -79,6 +78,12 @@ namespace DialogDemo
                 {
                     Win32Interop.EnableWindow(clientHwnd, true);
                     Win32Interop.SetForegroundWindow(clientHwnd);
+                }
+
+                // Убираем маску в любом случае
+                if (maskHwnd != IntPtr.Zero)
+                {
+                    Win32Interop.DestroyMaskWindow(maskHwnd);
                 }
 
                 _currentController = null;

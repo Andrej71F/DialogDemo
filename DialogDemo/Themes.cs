@@ -48,8 +48,8 @@ namespace DialogDemo
         public static readonly string[] DefaultVb6WindowClasses =
         {
             "ThunderRT6FormDC",
-            "ThunderRT6FormDC",
-            "ThunderRT6FormDC"
+            "ThunderRT6Main",
+            "ThunderRT6MDIForm"
         };
 
         #endregion Public Fields
