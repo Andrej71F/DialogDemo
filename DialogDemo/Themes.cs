@@ -1,9 +1,41 @@
 // Themes.cs
+using DialogDemo.DialogDemo;
 using System;
 using System.Windows.Media;
 
 namespace DialogDemo
 {
+    namespace DialogDemo
+    {
+        public class DialogLayoutDefinition
+        {
+            #region Public Properties
+
+            // Row proportions
+            public double TitleStar { get; set; } = 0.10;
+
+            public double MainStar { get; set; } = 0.40;
+            public double SubStar { get; set; } = 0.25;
+            public double ProgressStar { get; set; } = 0.05;
+            public double ButtonsStar { get; set; } = 0.20;
+
+            // TitleBar columns
+            public double TitleIconStar { get; set; } = 0.20;
+
+            public double TitleTextStar { get; set; } = 0.80;
+
+            // Buttons row columns
+            public double ButtonsLeftStar { get; set; } = 0.60;
+
+            public double ButtonsRightStar { get; set; } = 0.40;
+
+            // Computed property
+            public double MainStarWhenNoSub => MainStar + SubStar;
+
+            #endregion Public Properties
+        }
+    }
+
     public enum DialogButtonResult
     {
         None = 0,
@@ -53,37 +85,6 @@ namespace DialogDemo
         Large = 2,
 
         CustomDef = 100
-    }
-
-    public static class DialogLayoutDefinition
-    {
-        #region Public Fields
-
-        // Row proportions
-        public const double TitleStar = 0.10;
-
-        public const double MainStar = 0.40;
-
-        public const double SubStar = 0.25;
-
-        public const double ProgressStar = 0.05;
-
-        public const double ButtonsStar = 0.20;
-
-        // When SubMessage is empty
-        public const double MainStarWhenNoSub = MainStar + SubStar; // 0.65
-
-        // TitleBar columns
-        public const double TitleIconStar = 0.20;
-
-        public const double TitleTextStar = 0.80;
-
-        // Buttons row columns
-        public const double ButtonsLeftStar = 0.60;
-
-        public const double ButtonsRightStar = 0.40;
-
-        #endregion Public Fields
     }
 
     public sealed class DialogClientTarget
@@ -308,6 +309,8 @@ namespace DialogDemo
         public double? Width { get; set; }
 
         public double? Height { get; set; }
+
+        public DialogLayoutDefinition Layout { get; set; } = new DialogLayoutDefinition();
 
         #endregion Public Properties
     }

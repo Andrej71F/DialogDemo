@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DialogDemo.DialogDemo;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,6 +20,8 @@ namespace DialogDemo
         private Button _defaultButton;
 
         private Button _cancelButton;
+
+        private DialogLayoutDefinition _layout;
 
         #endregion Private Fields
 
@@ -242,36 +245,33 @@ namespace DialogDemo
             Focus();
         }
 
-        private void ApplyInitialLayout()
+        private void ApplyInitialLayout(DialogLayoutDefinition layout)
         {
-            // Rows
-            TitleRow.Height = new GridLength(DialogLayoutDefinition.TitleStar, GridUnitType.Star);
-            MainMessageRow.Height = new GridLength(DialogLayoutDefinition.MainStar, GridUnitType.Star);
-            SubMessageRow.Height = new GridLength(DialogLayoutDefinition.SubStar, GridUnitType.Star);
-            ProgressRow.Height = new GridLength(DialogLayoutDefinition.ProgressStar, GridUnitType.Star);
-            ButtonsRow.Height = new GridLength(DialogLayoutDefinition.ButtonsStar, GridUnitType.Star);
+            TitleRow.Height = new GridLength(layout.TitleStar, GridUnitType.Star);
+            MainMessageRow.Height = new GridLength(layout.MainStar, GridUnitType.Star);
+            SubMessageRow.Height = new GridLength(layout.SubStar, GridUnitType.Star);
+            ProgressRow.Height = new GridLength(layout.ProgressStar, GridUnitType.Star);
+            ButtonsRow.Height = new GridLength(layout.ButtonsStar, GridUnitType.Star);
 
-            // TitleBar columns
-            TitleIconColumn.Width = new GridLength(DialogLayoutDefinition.TitleIconStar, GridUnitType.Star);
-            TitleTextColumn.Width = new GridLength(DialogLayoutDefinition.TitleTextStar, GridUnitType.Star);
+            TitleIconColumn.Width = new GridLength(layout.TitleIconStar, GridUnitType.Star);
+            TitleTextColumn.Width = new GridLength(layout.TitleTextStar, GridUnitType.Star);
 
-            // Buttons row columns
-            ButtonsLeftColumn.Width = new GridLength(DialogLayoutDefinition.ButtonsLeftStar, GridUnitType.Star);
-            ButtonsRightColumn.Width = new GridLength(DialogLayoutDefinition.ButtonsRightStar, GridUnitType.Star);
+            ButtonsLeftColumn.Width = new GridLength(layout.ButtonsLeftStar, GridUnitType.Star);
+            ButtonsRightColumn.Width = new GridLength(layout.ButtonsRightStar, GridUnitType.Star);
         }
 
-        private void ApplyDynamicLayout()
+        private void ApplyDynamicLayout(DialogLayoutDefinition layout)
         {
             bool hasSub = !string.IsNullOrWhiteSpace(SubMessage.Text);
 
             if (hasSub)
             {
-                MainMessageRow.Height = new GridLength(DialogLayoutDefinition.MainStar, GridUnitType.Star);
-                SubMessageRow.Height = new GridLength(DialogLayoutDefinition.SubStar, GridUnitType.Star);
+                MainMessageRow.Height = new GridLength(layout.MainStar, GridUnitType.Star);
+                SubMessageRow.Height = new GridLength(layout.SubStar, GridUnitType.Star);
             }
             else
             {
-                MainMessageRow.Height = new GridLength(DialogLayoutDefinition.MainStarWhenNoSub, GridUnitType.Star);
+                MainMessageRow.Height = new GridLength(layout.MainStarWhenNoSub, GridUnitType.Star);
                 SubMessageRow.Height = new GridLength(0, GridUnitType.Star);
             }
         }
@@ -385,11 +385,13 @@ namespace DialogDemo
 
             Topmost = true;
 
-            ApplyInitialLayout();
+            _layout = options.Layout ?? new DialogLayoutDefinition();
+
+            ApplyInitialLayout(_layout);
             ApplySize(options);
             UpdateFontScaling();
             BuildUi(options);
-            ApplyDynamicLayout();
+            ApplyDynamicLayout(_layout);
             ApplyTheme(options.Theme);
             ApplyIcon(options.Icon);
 
@@ -425,7 +427,7 @@ namespace DialogDemo
         public void UpdateSubMessage(string text)
         {
             SubMessage.Text = text ?? string.Empty;
-            ApplyDynamicLayout();
+            ApplyDynamicLayout(_layout);
         }
 
         public void SimulateButtonClick(DialogButtonResult result)
