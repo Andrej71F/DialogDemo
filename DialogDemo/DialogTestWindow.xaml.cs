@@ -45,20 +45,22 @@ namespace DialogDemo
 
         private void OpenDialogButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_dialog != null)
-            {
-                _dialog.Close();
-                _dialog = null;
-            }
-
             _options = BuildOptionsFromUi();
 
-            _dialog = new DialogWindow(_options);
-            _dialog.ButtonClicked += Dialog_ButtonClicked;
-            _dialog.DialogClosed += Dialog_DialogClosed;
+            AppendResult("Opening dialog...");
 
-            _dialog.Show();
-            AppendResult("Dialog opened.");
+            var thread = new Thread(() =>
+            {
+                var result = SystemWideModalDialogService.ShowDialog(_options);
+
+                Dispatcher.Invoke(() =>
+                {
+                    AppendResult($"Dialog closed. Result={result.Result}, External={result.ClosedByExternalRequest}");
+                });
+            });
+
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
         }
 
         private void CloseDialogButton_Click(object sender, RoutedEventArgs e)
